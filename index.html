@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>reveal.js - The HTML Presentation Framework</title>
+		<title>Have a go</title>
 
 		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
 		<meta name="author" content="Hakim El Hattab">
@@ -43,23 +43,221 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
-					<h1>Reveal.js</h1>
-					<h3>HTML Presentations Made Easy</h3>
+					<h1>Have a go</h1>
+					<h3>http://golang.org</h3>
 					<p>
-						<small>Created by <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small>
+						<small>Donny Kurniawan</small>
 					</p>
 				</section>
 
 				<section>
-					<h2>Heads Up</h2>
+					<h2>Go</h2>
 					<p>
-						reveal.js is a framework for easily creating beautiful presentations using HTML. You'll need a browser with
-						support for CSS 3D transforms to see it in its full glory.
+						Go, also called golang, is a statically-typed language with syntax loosely derived from that of C, adding garbage collected memory management, type safety, some dynamic-typing capabilities, additional built-in types such as variable-length arrays and key-value maps.
 					</p>
+				</section>
 
-					<aside class="notes">
-						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
-					</aside>
+				<section>
+					<section>
+						<h2>Hello World</h2>
+						<pre><code data-trim>
+package main
+
+func main() {
+	print("Hello world.")
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+Hello world.
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>Go Fmt</h2>
+					<p>
+						Formats your code according to the standard style covering indentation, spacing, and many other details.
+					</p>
+					<p>
+						<small>Demo</small>
+					</p>
+				</section>
+
+				<section>
+					<section>
+						<h2>Packages and imports</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+// import "fmt"
+// import "reflect"
+
+func main() {
+	fmt.Printf("Type: %s", reflect.TypeOf("hello"))
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+Type: string
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Functions</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func add(x int, y int) int {
+	return x + y
+}
+
+func main() {
+	fmt.Println(add(42, 13))
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+55
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Functions</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func add(x, y int) (int, string) {
+	return x + y, "OK"
+}
+
+func main() {
+	fmt.Println(add(42, 13))
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+55 OK
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Functions</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func add(x, y int) (result int, status string) {
+	result = x + y
+	status = "OK"
+	return
+}
+
+func main() {
+	fmt.Println(add(42, 13))
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+55 OK
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Functions</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func add(x, y int) int {
+	realadd := func(x, y int) int {
+		return x + y
+	}
+
+	return realadd(x, y)
+}
+
+func main() {
+	fmt.Println(add(42, 13))
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+55
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<h2>Types</h2>
+					<ul>
+						<li>bool</li>
+						<li>string</li>
+						<li>int int8 int16 int32 int64</li>
+						<li>uint uint8 uint16 uint32 uint64 uintptr</li>
+						<li>byte (uint8)</li>
+						<li>rune (int32)</li>
+						<li>float32 float64</li>
+						<li>complex64 complex128</li>
+					</ul>
+				</section>
+
+				<section>
+					<section>
+						<h2>Variables</h2>
+						<pre><code data-trim>
+package main
+
+func main() {
+	var i int = 42
+	var f float64 = float64(i)
+
+	ix := 43
+	fx := 43.0
+
+	println(i, f)
+	println(ix, fx)
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+42 +4.200000e+001
+43 +4.300000e+001
+						</code></pre>
+					</section>
 				</section>
 
 				<!-- Example of nested vertical slides -->
