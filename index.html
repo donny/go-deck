@@ -260,6 +260,314 @@ func main() {
 					</section>
 				</section>
 
+				<section>
+					<section>
+						<h2>For Loop</h2>
+						<pre><code data-trim>
+package main
+
+func main() {
+	sum := 0
+	for i := 0; i < 3; i++ {
+		sum += i
+	}
+
+	print(sum)
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+3
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>For Loop</h2>
+						<pre><code data-trim>
+package main
+
+func main() {
+	sum := 1
+	for sum < 3 {
+		sum += 1
+	}
+
+	print(sum)
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+3
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>If Else</h2>
+						<pre><code data-trim>
+package main
+
+func main() {
+	answer := 42
+
+	if answer != 42 {
+		print("false")
+	} else {
+		print("true")
+	}
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+true
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>If Else</h2>
+						<pre><code data-trim>
+package main
+
+func main() {
+	answer := 42
+
+	if status := "ok"; answer != 42 {
+		println("false")
+		println(status)
+	} else {
+		println("true")
+		println(status)
+	}
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+true
+ok
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Structs</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+type Vertex struct {
+	X, Y int
+}
+
+func main() {
+	p := Vertex{1, 2}  // has type Vertex
+	q := &Vertex{1, 2} // has type *Vertex
+	r := Vertex{X: 1}  // Y:0 is implicit
+	s := Vertex{}      // X:0 and Y:0
+
+	fmt.Println(p, q, r, s)
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+{1 2} &{1 2} {1 0} {0 0}
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Pointers</h2>
+						<ul>
+							<li>Go has pointers, but no pointer arithmetic.</li>
+							<li>The indirection through the pointer is transparent.</li>
+							<li>By default Go passes arguments by values (copying the arguments).</li>
+							<li>To get the pointer of a value, use the &amp; symbol in front of the value.</li>
+							<li>To dereference a pointer, use the * symbol.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Pointers</h2>
+						<pre><code data-trim>
+package main
+import "fmt"
+
+type Vertex struct {
+	X, Y int
+}
+
+func main() {
+	p := Vertex{1, 2}  // has type Vertex
+	q := &Vertex{1, 2} // has type *Vertex
+	p.X = 3
+	p.Y = 4
+	q.X = 8
+	q.Y = 9
+
+	fmt.Println(p, q)
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+{3 4} &{8 9}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Pointers</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"fmt"
+)
+
+type Bootcamp struct {
+	Lat float64
+	Lon float64
+}
+
+func main() {
+	x := new(Bootcamp) // new(), zeroed values
+	y := &Bootcamp{}   // struct literal
+	fmt.Println(*x == *y)
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+true
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Arrays</h2>
+						<ul>
+							<li>An array’s length is part of its type.</li>
+							<li>Arrays cannot be resized.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Arrays</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func main() {
+	var a [2]string
+	a[0] = "Hello"
+	a[1] = "World"
+	fmt.Println(a[0], a[1])
+	fmt.Println(a)
+	fmt.Println(reflect.TypeOf(a))
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+Hello World
+[Hello World]
+[2]string
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Arrays</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func main() {
+	a := [2]string{"hello", "world!"}
+	b := [...]string{"hello", "world", "again"}
+	fmt.Println(a)
+	fmt.Println(b)
+	fmt.Println(reflect.TypeOf(a))
+	fmt.Println(reflect.TypeOf(b))
+	fmt.Println(len(a))
+	fmt.Println(len(b))
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+[hello world!]
+[hello world again]
+[2]string
+[3]string
+2
+3
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Arrays</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func main() {
+	var a [2][3]string
+	for i := 0; i < 2; i++ {
+		for j := 0; j < 3; j++ {
+			a[i][j] = fmt.Sprintf("row %d - column %d", i+1, j+1)
+		}
+	}
+	fmt.Printf("%q", a)
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+[["row 1 - column 1" "row 1 - column 2" "row 1 - column 3"] ["row 2 - column 1" "row 2 - column 2" "row 2 - column 3"]]
+						</code></pre>
+					</section>
+
+				</section>
+
 				<!-- Example of nested vertical slides -->
 				<section>
 					<section>
