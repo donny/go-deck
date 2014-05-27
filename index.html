@@ -568,6 +568,152 @@ func main() {
 
 				</section>
 
+				<section>
+					<section>
+						<h2>Slices</h2>
+						<ul>
+							<li>Slices wrap arrays to give a more general interfaces to sequences.</li>
+							<li>Most array programming in Go is done with slices rather than simple arrays.</li>
+							<li>Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array.</li>
+							<li>Slices can be resized since they are just a wrapper on top of another data structure.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Slices</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func main() {
+	p := []int{2, 3}
+	fmt.Println(p)
+	fmt.Println(reflect.TypeOf(p))
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+[2 3]
+[]int
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Slices</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func main() {
+	cities := make([]string, 3)
+	cities[0] = "Santa Monica"
+	cities[1] = "Venice"
+	cities[2] = "Los Angeles"
+	fmt.Printf("%q\n", cities)
+
+	cities2 := []string{}
+	cities2 = append(cities2, "San Diego")
+	fmt.Printf("%q", cities2)
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+["Santa Monica" "Venice" "Los Angeles"]
+["San Diego"]
+						</code></pre>
+					</section>
+
+				</section>
+
+				<section>
+					<section>
+						<h2>Maps</h2>
+						<ul>
+							<li>Similar to hashes or dictionaries.</li>
+							<li>When not using map literals like above, maps must be created with make (not new) before use.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Maps</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+import "reflect"
+
+func main() {
+	celebs := map[string]int{
+		"Nicolas Cage":       50,
+		"Selena Gomez":       21,
+		"Jude Law":           41,
+		"Scarlett Johansson": 29,
+	}
+
+	fmt.Printf("%#v\n", celebs)
+	fmt.Println(reflect.TypeOf(celebs))
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+map[string]int{"Nicolas Cage":50, "Selena Gomez":21, "Jude Law":41, "Scarlett Johansson":29}
+map[string]int
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Maps</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+type Vertex struct {
+	Lat, Long float64
+}
+
+var m map[string]Vertex
+
+func main() {
+	m = make(map[string]Vertex)
+	m["Bell Labs"] = Vertex{40.68433, -74.39967}
+	fmt.Println(m["Bell Labs"])
+	delete(m, "Bell Labs")
+	fmt.Println(m["Bell Labs"])
+	elem, ok := m["Bell Labs"]
+	fmt.Println(elem, ok)
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+{40.68433 -74.39967}
+{0 0}
+{0 0} false
+						</code></pre>
+					</section>
+
+				</section>
+
 				<!-- Example of nested vertical slides -->
 				<section>
 					<section>
