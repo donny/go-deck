@@ -714,6 +714,282 @@ func main() {
 
 				</section>
 
+				<section>
+					<section>
+						<h2>Methods</h2>
+						<ul>
+							<li>Go does not have classes. However, you can define methods on struct types.</li>
+							<li>A method is a function that has a defined receiver.</li>
+							<li>The method receiver appears in its own argument list between the func keyword and the method name.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Methods</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+type User struct {
+	FirstName, LastName string
+}
+
+func (u User) Greeting() string {
+	return fmt.Sprintf("Dear %s %s", u.FirstName, u.LastName)
+}
+
+func main() {
+	u := User{"Donny", "Kurniawan"}
+	fmt.Println(u.Greeting())
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+Dear Donny Kurniawan
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Methods</h2>
+						<ul>
+							<li>Methods are defined outside of the struct.</li>
+							<li>You can define a method on any type you define in your package, not just structs.</li>
+							<li>You cannot define a method on a type from another package, or on a basic type.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Methods</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
+type Vertex struct {
+	X, Y float64
+}
+
+func (v *Vertex) Scale(f float64) {
+	v.X = v.X * f
+	v.Y = v.Y * f
+}
+
+func (v *Vertex) Abs() float64 {
+	return math.Sqrt(v.X*v.X + v.Y*v.Y)
+}
+
+func main() {
+	v := &Vertex{3, 4}
+	v.Scale(5)
+	fmt.Println(v, v.Abs())
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+&{15 20} 25
+						</code></pre>
+					</section>
+
+				</section>
+
+				<section>
+					<section>
+						<h2>Interfaces</h2>
+						<ul>
+							<li>An interface type is defined by a set of methods.</li>
+							<li>A value of interface type can hold any value that implements those methods.</li>
+							<li>The method receiver appears in its own argument list between the func keyword and the method name.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Interfaces</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"fmt"
+)
+
+type User struct {
+	FirstName, LastName string
+}
+
+func (u *User) Name() string {
+	return fmt.Sprintf("%s %s", u.FirstName, u.LastName)
+}
+
+type Namer interface {
+	Name() string
+}
+
+func Greet(n Namer) string {
+	return fmt.Sprintf("Dear %s", n.Name())
+}
+
+func main() {
+	u := &User{"Matt", "Damon"}
+	fmt.Println(Greet(u))
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+Dear Matt Damon
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Interfaces</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"fmt"
+)
+
+type User struct {
+	FirstName, LastName string
+}
+
+func (u *User) Name() string {
+	return fmt.Sprintf("%s %s", u.FirstName, u.LastName)
+}
+
+type Customer struct {
+	Id       int
+	FullName string
+}
+
+func (c *Customer) Name() string {
+	return c.FullName
+}
+
+type Namer interface {
+	Name() string
+}
+
+func Greet(n Namer) string {
+	return fmt.Sprintf("Dear %s", n.Name())
+}
+
+func main() {
+	u := &User{"Matt", "Damon"}
+	fmt.Println(Greet(u))
+	c := &Customer{42, "Customer"}
+	fmt.Println(Greet(c))
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+Dear Matt Damon
+Dear Customer
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Interfaces</h2>
+						<ul>
+							<li>A type implements an interface by implementing the methods.</li>
+							<li>There is no explicit declaration of intent.</li>
+							<li>You cannot define a method on a type from another package, or on a basic type.</li>
+						</ul>
+					</section>
+
+				</section>
+
+				<section>
+					<section>
+						<h2>Composition</h2>
+						<ul>
+							<li>Coming from an OOP background a lot of us are used to inheritance.</li>
+							<li>Need to think in terms of composition and interfaces.</li>
+							<li>Go supports implicit composition.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Composition</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"log"
+	"os"
+)
+
+type Job struct {
+	Command string
+	Logger  *log.Logger
+}
+
+func main() {
+	job := &Job{"demo", log.New(os.Stderr, "Job: ", log.Ldate)}
+	// same as
+	// job := &Job{Command: "demo", Logger: log.New(os.Stderr, "Job: ", log.Ldate)}
+	job.Logger.Print("test")
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+Job: 2014/05/28 test
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Composition</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"log"
+	"os"
+)
+
+type Job struct {
+	Command string
+	*log.Logger
+}
+
+func main() {
+	job := &Job{"demo", log.New(os.Stderr, "Job: ", log.Ldate)}
+	job.Print("starting now...")
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+Job: 2014/05/28 starting now...
+						</code></pre>
+					</section>
+
+				</section>
+
+
 				<!-- Example of nested vertical slides -->
 				<section>
 					<section>
