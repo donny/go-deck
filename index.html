@@ -989,6 +989,285 @@ Job: 2014/05/28 starting now...
 
 				</section>
 
+				<section>
+					<section>
+						<h2>Concurrency</h2>
+						<ul>
+							<li>Made difficult by the subtleties required to implement correct access to shared variables.</li>
+							<li>Shared values are passed around on channels and, in fact, never actively shared by separate threads of execution.</li>
+							<li>Only one goroutine has access to the value at any given time.</li>
+							<li>Data races cannot occur, by design.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h3>Do not communicate by sharing memory; <br/>instead, share memory by communicating.</h3>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Goroutines</h2>
+						<ul>
+							<li>A goroutine is a lightweight thread managed by the Go runtime.</li>
+							<li><code>go f(x, y, z)</code> starts a new goroutine running <code>f(x, y, z)</code>.</li>
+							<li>The evaluation of <code>f, x, y, z</code> happens in the current goroutine and the execution of <code>f</code> happens in the new goroutine.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Goroutines</h2>
+						<pre><code data-trim>
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func say(s string) {
+	for i := 0; i < 2; i++ {
+		time.Sleep(100 * time.Millisecond)
+		fmt.Println(s)
+	}
+}
+
+func main() {
+	go say("world")
+	say("hello")
+}
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+hello
+world
+hello
+						</code></pre>
+					</section>
+
+				</section>
+
+
+				<section>
+					<section>
+						<h2>Channels</h2>
+						<ul>
+							<li>Channels are a typed conduit through which you can send and receive values with the channel operator, <code><-</code>.</li>
+							<li><code>ch <- v</code>, sends v to channel ch.</li>
+							<li><code>v := <-ch</code>, receives from ch and assign value to v.</li>
+							<li>Must be created before use, <code>ch := make(chan int)</code>.</li>
+							<li>By default, sends and receives block until the other side is ready. This allows goroutines to synchronize without explicit locks or condition variables.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Channels</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func sum(a []int, c chan int) {
+	sum := 0
+	for _, v := range a {
+		sum += v
+	}
+	c <- sum // send sum to c
+}
+
+func main() {
+	a := []int{7, 2, 8, -9, 4, 0}
+
+	c := make(chan int)
+
+	go sum(a[:len(a)/2], c)
+	go sum(a[len(a)/2:], c)
+
+	x, y := <-c, <-c // receive from c
+
+	fmt.Println(x, y, x+y)
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+17 -5 12
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Channels</h2>
+						<ul>
+							<li>Channels can be buffered.</li>
+							<li>Sends to a buffered channel block only when the buffer is full.</li>
+							<li>Receives block when the buffer is empty.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Channels</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func main() {
+    c := make(chan int, 2)
+    c <- 1
+    c <- 2
+    fmt.Println(<-c)
+    fmt.Println(<-c)
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+1
+2
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Channels</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func main() {
+	c := make(chan int, 2)
+	c <- 1
+	c <- 2
+	c <- 3
+	fmt.Println(<-c)
+	fmt.Println(<-c)
+	fmt.Println(<-c)
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+fatal error: all goroutines are asleep - deadlock!
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Channels</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func main() {
+	c := make(chan int, 2)
+	c <- 1
+	c <- 2
+	c3 := func() { c <- 3 }
+	go c3()
+	fmt.Println(<-c)
+	fmt.Println(<-c)
+    fmt.Println(<-c)
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+1
+2
+3
+						</code></pre>
+					</section>
+
+				</section>
+
+
+				<section>
+					<section>
+						<h2>Select</h2>
+						<ul>
+							<li>It lets a goroutine wait on multiple communication operations.</li>
+							<li>A select blocks until one of its cases can run, then it executes that case.</li>
+							<li>It chooses one at random if multiple are ready.</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Select</h2>
+						<pre><code data-trim>
+package main
+
+import "fmt"
+
+func fibonacci(c, quit chan int) {
+	x, y := 0, 1
+	for {
+		select {
+		case c <- x:
+			x, y = y, x+y
+		case <-quit:
+			fmt.Println("quit")
+			return
+		}
+	}
+}
+
+func main() {
+	c := make(chan int)
+	quit := make(chan int)
+
+	go func() {
+		for i := 0; i < 10; i++ {
+			fmt.Println(<-c)
+		}
+		
+		quit <- 0
+	}()
+
+	fibonacci(c, quit)
+}
+
+
+						</code></pre>
+					</section>
+
+					<section>
+						<pre><code data-trim>
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+quit
+						</code></pre>
+					</section>
+
+				</section>
+
+
+				<section>
+					<section>
+						<h2>Resources</h2>
+						<ul>
+							<li>http://golang.org</li>
+							<li>http://play.golang.org</li>
+							<li>http://www.golangbootcamp.com</li>
+							<li>http://dave.cheney.net/resources-for-new-go-programmers</li>
+						</ul>
+					</section>
+
+				</section>
 
 				<!-- Example of nested vertical slides -->
 				<section>
